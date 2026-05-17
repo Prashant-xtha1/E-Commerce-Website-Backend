@@ -11,3 +11,12 @@
   - npm i pnpm -g (global dependency)
   - pnpm init
 
+### E-Commerce Features:
+
+- Authentication
+  - Register
+  - Login
+  - Activate User
+  - Forgot Password
+  - Reset Password
+  - Logout User
