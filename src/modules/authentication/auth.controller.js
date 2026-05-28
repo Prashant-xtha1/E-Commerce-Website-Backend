@@ -1,7 +1,6 @@
 class AuthController {
   registerUser = (req, res) => {
     const data = req.body;
-    console.log(data)
     res.json({
       data: data,
       message: "Registration Success",
@@ -16,6 +15,13 @@ class AuthController {
     status: "OK",
   })
 }
+
+  getLoggedInUser = (req, res, next) => {
+    res.json({
+      message: "I am logged in user"
+    })
+    // next();
+  }
 }
 
 const authCtrl = new AuthController();
