@@ -15,7 +15,19 @@ const bodyValidator = (schema) => {
       await schema.validateAsync(data, { abortEarly: false });
       next();
     } catch (exception) {
-      next(exception);
+      let messageBag = {};
+      if(exception instanceof Joi.ValidationError) {
+        exception.details.map((error) => {
+          messageBag[error.path.pop()] = error.message;
+        })
+      }
+
+      next({
+        code: 400,
+        details: messageBag,
+        message: "Validation Failed",
+        status: "VALIDATION_ERR",
+      });
     }
   };
 };
