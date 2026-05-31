@@ -1,6 +1,11 @@
 class AuthController {
   registerUser = (req, res) => {
-    const data = req.body;
+    const body = req.body;
+    const image = req.file;
+    const data = {
+      body,
+      image
+    }
     res.json({
       data: data,
       message: "Registration Success",
