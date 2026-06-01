@@ -20,7 +20,7 @@ const uploader = () => {
   const fileFilter = (req, file, cb) => {
     const ext = file.originalname.split(".").pop();
     if(["jpg", "jpeg", "png", "bmp", "svg", "webp", "heic", "gif"].includes(ext.toLowerCase())){
-      cb(false, true);
+      cb(null, true);
     } else {
       cb({
         code: 422,
