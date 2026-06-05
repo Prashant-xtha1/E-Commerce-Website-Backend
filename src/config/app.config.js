@@ -6,6 +6,14 @@ const CloudinaryConfig = {
   apiSecret: process.env.CLOUDINARY_API_SECRET,
 }
 
+const DbConfig = {
+  mongodb: {
+    url: process.env.MONGODB_URL,
+    dbname: process.env.MONGODB_DBNAME,
+  }
+}
+
 module.exports = {
-  CloudinaryConfig
+  CloudinaryConfig,
+  DbConfig
 }
