@@ -2,6 +2,9 @@ const express = require("express");
 const router = require("../routes/router");
 const app = express();
 
+// Importing MongoDB 
+require("./mongodb.config")
+
 // Setting urlencoded parser
 app.use(
   express.urlencoded({
