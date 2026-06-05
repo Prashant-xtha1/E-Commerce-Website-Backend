@@ -1,16 +1,19 @@
+const cloudinaryService = require("../../services/cloudinary.service");
+
 class AuthController {
-  registerUser = (req, res) => {
-    const body = req.body;
-    const image = req.file;
-    const data = {
-      body,
-      image
+  registerUser = async (req, res, next) => {
+    try {
+      const data = req.body;
+      data.image = await cloudinaryService.singleFileUpload(req.file.path, "/users");
+
+      res.json({
+        data: data,
+        message: "Registration Successful",
+        status: "OK",
+      })
+    } catch (exception) {
+      next(exception);
     }
-    res.json({
-      data: data,
-      message: "Registration Success",
-      status: "Ok",
-    })
   }
 
   loginUser = (req, res) => {
