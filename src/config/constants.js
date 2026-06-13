@@ -1,12 +1,12 @@
 const UserRoles = {
-  ADMIN = "admin",
-  CUSTOMER = "customer",
-  SELLER = "seller",
+  ADMIN: "admin",
+  CUSTOMER: "customer",
+  SELLER: "seller",
 }
 
 const Status = {
-  ACTIVE = "active",
-  INACTIVE = "inactive",
+  ACTIVE: "active",
+  INACTIVE: "inactive",
 }
 
 module.exports = {
