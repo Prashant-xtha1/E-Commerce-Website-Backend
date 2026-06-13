@@ -13,7 +13,7 @@ class AuthService {
       
       // Token creation
       data.token = generateRandomString();
-      data.expiryTime = Date.now() + 86400000
+      data.expiryTime = Date.now() + 86400000;
 
       return data;
     } catch (exception) {
