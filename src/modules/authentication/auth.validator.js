@@ -1,4 +1,5 @@
 const Joi = require("joi");
+const { UserRoles } = require("../../config/constants");
 
 // Creating LoginDTO 
 const LoginDTO = Joi.object({
@@ -11,7 +12,7 @@ const RegisterDTO = Joi.object({
   email: Joi.string().email().required(),
   password: Joi.string().required(),
   confirmPassword: Joi.string().valid(Joi.ref("password")).required(),
-  role: Joi.string().valid("user", "seller").default("user"),
+  role: Joi.string().regex(/^(customer|seller)$/).default(UserRoles.CUSTOMER),
   image: Joi.string().allow(null, '').optional().default(null)
 })
 
