@@ -1,13 +1,17 @@
 const cloudinaryService = require("../../services/cloudinary.service");
+const userService = require("../user/user.service");
 
 class AuthController {
   registerUser = async (req, res, next) => {
     try {
       const data = req.body;
-      data.image = await cloudinaryService.singleFileUpload(req.file.path, "/users");
+      // data.image = await cloudinaryService.singleFileUpload(req.file.path, "/users");
+
+      // Database save
+      const user = await userService.storeUser(data);
 
       res.json({
-        data: data,
+        data: user,
         message: "Registration Successful",
         status: "OK",
       })
