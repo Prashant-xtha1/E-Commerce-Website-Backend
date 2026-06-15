@@ -22,8 +22,14 @@ const SMTPConfig = {
   smtpProvider: process.env.SMTP_PROVIDER,
 }
 
+const AppConfig = {
+  feUrl: process.env.FRONTEND_URL,
+  beUrl: process.env.BACKEND_URL,
+}
+
 module.exports = {
   CloudinaryConfig,
   DbConfig,
-  SMTPConfig
+  SMTPConfig,
+  AppConfig,
 }
