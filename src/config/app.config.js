@@ -13,7 +13,17 @@ const DbConfig = {
   }
 }
 
+const SMTPConfig = {
+  smtpHost: process.env.SMTP_HOST,
+  smtpPort: process.env.SMTP_PORT,
+  smtpUser: process.env.SMTP_USER,
+  smtpPassword: process.env.SMTP_PASSWORD,
+  smtpFrom: process.env.SMTP_FROM,
+  smtpProvider: process.env.SMTP_PROVIDER,
+}
+
 module.exports = {
   CloudinaryConfig,
-  DbConfig
+  DbConfig,
+  SMTPConfig
 }
