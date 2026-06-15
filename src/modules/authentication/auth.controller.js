@@ -6,8 +6,12 @@ class AuthController {
     try {
       // Transforming user data
       const data = await authService.tranformForUser(req);
+      
       // Database save
       const user = await userService.storeUser(data);
+
+      // notifying user 
+      await authService.sendAccountActivationNotificationEmail(user);
 
       res.json({
         data: user,
@@ -19,7 +23,7 @@ class AuthController {
     }
   }
 
-  loginUser = (req, res) => {
+  loginUser = (req, res, next) => {
   res.json({
     data: {},
     message: "Login Success by Prashant",
