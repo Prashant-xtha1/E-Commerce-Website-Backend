@@ -14,7 +14,7 @@ class AuthController {
       await authService.sendAccountActivationNotificationEmail(user);
 
       res.json({
-        data: user,
+        data: userService.getPublicProfileOfUser(user),
         message: "Registration Successful",
         status: "OK",
       })
