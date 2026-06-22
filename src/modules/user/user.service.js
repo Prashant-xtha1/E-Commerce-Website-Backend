@@ -10,6 +10,24 @@ class UserService {
     }
   }
 
+  async getSingleUserByFilter(filter){
+    try {
+      const user = await UserModel.findOne(filter);
+      return user;
+    } catch (exception) {
+      throw exception;
+    }
+  }
+
+  async updateSingleRowByFilter(filter, data){
+    try {
+      const update = await UserModel.findOneAndUpdate(filter, {$set: data}, {new: true})
+      return update;
+    } catch (exception) {
+      throw exception;
+    }
+  }
+
   getPublicProfileOfUser(user) {
     const userObj = {
       name: user.name,

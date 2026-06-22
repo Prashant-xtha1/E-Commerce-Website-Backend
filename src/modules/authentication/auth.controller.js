@@ -1,4 +1,5 @@
 const { AppConfig } = require("../../config/app.config");
+const { Status } = require("../../config/constants");
 const userService = require("../user/user.service");
 const authService = require("./auth.service");
 
@@ -26,6 +27,50 @@ class AuthController {
         message: "Registration Successful",
         status: "OK",
         meta: meta,
+      })
+    } catch (exception) {
+      next(exception);
+    }
+  }
+
+  activateUser = async (req, res, next) => {
+    try {
+      const token = req.params.token;
+      let user = await userService.getSingleUserByFilter({
+        token: token
+      });
+      if(!user) {
+        throw {
+          code: 404,
+          message: "Token not found",
+          status: "TOKEN_NOT_FOUND_ERR",
+        }
+      }
+
+      const today = Date.now();
+      const expiryTime = user.expiryTime.getTime();
+
+      if(today > expiryTime) {
+        throw {
+          code: 422,
+          message: "Activation token expired",
+          status: "TOKEN_EXPIRED_ERR",
+        }
+      }
+
+      user = await userService.updateSingleRowByFilter(
+        {_id: user._id},
+        {
+          status: Status.ACTIVE,
+          token: null,
+          expiryTime: null,
+        },
+      );
+
+      res.json({
+        data: userService.getPublicProfileOfUser(user),
+        message: "Account Activated Successfully",
+        status: "SUCCESS",
       })
     } catch (exception) {
       next(exception);

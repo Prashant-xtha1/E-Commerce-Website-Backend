@@ -9,6 +9,7 @@ const authRouter = require("express").Router();
 // authRouter.post("/register", "");
 // authRouter.get("/activate/:token", "" );
 authRouter.post("/register",uploader().single("image"), bodyValidator(RegisterDTO), authCtrl.registerUser);
+authRouter.post("/activate/:token", authCtrl.activateUser);
 authRouter.get("/login", bodyValidator(LoginDTO), authCtrl.loginUser);
 authRouter.get("/me", checkLogin, authCtrl.getLoggedInUser);
 
