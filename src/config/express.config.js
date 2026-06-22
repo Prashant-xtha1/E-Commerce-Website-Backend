@@ -38,6 +38,19 @@ app.use((error, req, res, next) => {
   let msg = error.message ?? "App Server Error....";
   let status = error.status ?? "APP_ERR";
 
+  // MongoDB Validation Failed Exception
+  if(error.name === "MongoServerError"){
+    if(+error.code === 11000){
+      code = 400,
+      details = {},
+      msg = "Validation Failed",
+      status = "VALIDATION_FAILED_ERR",
+      Object.keys(error.keyPattern).map((field) => {
+        details[field] = `${field} should be unique`
+      })
+    }
+  }
+
   res.status(code).json({
     error: details,
     message: msg,
