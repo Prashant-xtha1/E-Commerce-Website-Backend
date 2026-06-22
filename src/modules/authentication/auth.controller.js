@@ -17,7 +17,7 @@ class AuthController {
         await authService.sendAccountActivationNotificationEmail(user);
       } else {
         meta = {
-          activationLink = `${AppConfig.feUrl}/activate/${user.token}`
+          activationLink: `${AppConfig.feUrl}/activate/${user.token}`
         }
       }
 
