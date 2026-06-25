@@ -26,6 +26,7 @@ const AppConfig = {
   environment: process.env.ENVIRONMENT,
   feUrl: process.env.FRONTEND_URL,
   beUrl: process.env.BACKEND_URL,
+  jwtSecret: process.env.JWT_SECRET,
 }
 
 module.exports = {
