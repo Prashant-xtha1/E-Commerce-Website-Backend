@@ -1,8 +1,10 @@
 const { AppConfig } = require("../../config/app.config");
-const { Status } = require("../../config/constants");
+const { Status, UserRoles } = require("../../config/constants");
 const { generateRandomString } = require("../../utilities/helper");
 const userService = require("../user/user.service");
 const authService = require("./auth.service");
+const bycrpt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
 class AuthController {
   registerUser = async (req, res, next) => {
@@ -105,37 +107,78 @@ class AuthController {
 
       const data = {
         token: generateRandomString(),
-        expiryTime: Date.now() + 86400000  
-      }
+        expiryTime: Date.now() + 86400000,
+      };
 
-      let userDetail = await userService.updateSingleRowByFilter({_id: user._id}, data);
+      let userDetail = await userService.updateSingleRowByFilter(
+        { _id: user._id },
+        data,
+      );
 
       // notifying user
       let meta = {};
-      if(AppConfig.environment === "local") {
+      if (AppConfig.environment === "local") {
         await authService.resendAccountActivationNotificationEmail(userDetail);
       } else {
         meta = {
-          activationLink: `${AppConfig.feUrl}/activate/${userDetail.token}`
-        }
+          activationLink: `${AppConfig.feUrl}/activate/${userDetail.token}`,
+        };
       }
 
       res.json({
         data: userService.getPublicProfileOfUser(user),
         message: "Account re-activation link sent to email",
         status: "REACTIVATION_LINK_SENT",
-      })
+      });
     } catch (exception) {
       next(exception);
     }
   };
 
-  loginUser = (req, res, next) => {
-    res.json({
-      data: {},
-      message: "Login Success by Prashant",
-      status: "OK",
-    });
+  loginUser = async (req, res, next) => {
+    try {
+      const { email, password } = req.body;
+      const userDetail = await userService.getSingleUserByFilter({
+        email: email,
+      });
+
+      if (!userDetail) {
+        throw {
+          code: 404,
+          message: "User not registerd yet",
+          status: "USER_NOT_REGISTERED",
+        };
+      }
+
+      // checking user activate or not
+      if (userDetail.status !== Status.ACTIVE || userDetail.token) {
+        throw {
+          code: 422,
+          message: "User not activated",
+          status: "USER_NOT_ACTIVATED",
+        };
+      }
+
+      // password verification
+      if (!bycrpt.compareSync(password, userDetail.password)) {
+        throw {
+          code: 422,
+          message: "Credentials doesnot match",
+          status: "INVALID_CREDENTIALS",
+        };
+      }
+
+      // generating JWT token
+      let authToken = jwt.sign({sub: userDetail._id}, AppConfig.jwtSecret, {expiresIn: "1d"});
+
+      res.json({
+        data: authToken,
+        message: "Login Success",
+        status: "LOGIN_SUCCESS",
+      });
+    } catch (exception) {
+      next(exception);
+    }
   };
 
   getLoggedInUser = (req, res, next) => {
