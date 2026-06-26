@@ -12,6 +12,6 @@ authRouter.post("/register",uploader().single("image"), bodyValidator(RegisterDT
 authRouter.post("/activate/:token", authCtrl.activateUser);
 authRouter.post("/re-activate/:token", authCtrl.resendActivationToken);
 authRouter.get("/login", bodyValidator(LoginDTO), authCtrl.loginUser);
-authRouter.get("/me", checkLogin, authCtrl.getLoggedInUser);
+authRouter.get("/me", checkLogin(), authCtrl.getLoggedInUser);
 
 module.exports = authRouter;
