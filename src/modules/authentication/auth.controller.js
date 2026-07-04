@@ -183,9 +183,10 @@ class AuthController {
 
   getLoggedInUser = (req, res, next) => {
     res.json({
-      message: "I am logged in user",
+      data: req.loggedInUser,
+      message: "Your Profile",
+      status: "SUCCESS",
     });
-    // next();
   };
 }
 
