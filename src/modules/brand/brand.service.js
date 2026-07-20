@@ -34,6 +34,27 @@ class BrandService {
       throw exception;
     }
   }
+
+  async getAllRowsByFilter(filter, config={page: 1, limit: 20}) {
+    try {
+      const page = +config.page || 1;
+      const limit = +config.limit || 20;
+
+      // Pagination
+      const skip = (page - 1) * limit;
+      const data = await BrandModel.find(filter)
+      .populate("createdBy", ["_id", "name", "email", "role", "image", "status"])
+      .populate("updatedBy", ["_id", "name", "email", "role", "image", "status"])
+      .sort({"createdAt": "desc"})
+      .skip(skip)
+      .limit(limit)
+
+      const total = await BrandModel.countDocuments(filter);
+      return {data, pagination: {page, limit: limit, total: total}}
+    } catch (exception) {
+      throw exception;
+    }
+  }
 }
 
 const brandService = new BrandService();
