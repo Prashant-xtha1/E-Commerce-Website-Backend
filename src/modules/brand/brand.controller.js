@@ -18,7 +18,34 @@ class BrandController {
 
   async listAll(req, res, next) {
     try {
-      
+      let filter = {};
+      if (req.query.search) {
+        filter = {
+          $or: [{name: new RegExp(req.query.search, "i")}],
+        };
+      }
+
+      if(req.query.status) {
+        filter = {
+          ...filter,
+          status: req.query.status
+        }
+      }
+
+      const config = {
+        page: +req.query.page || 1,
+        limit: +req.query.limit || 20,
+      }
+
+      const {data, pagination} = await brandService.getAllRowsByFilter(filter, config);
+      res.json({
+        data: data,
+        message: "Brand Listing",
+        status: "OK",
+        meta: {
+          pagination,
+        }
+      })
     } catch (exception) {
       next(exception);
     }
