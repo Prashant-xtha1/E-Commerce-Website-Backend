@@ -125,7 +125,36 @@ class BrandController {
 
   async delete(req, res, next) {
     try {
-      
+      const loggedInUser = req.loggedInUser;
+
+      let filter = {
+        _id: req.params.brandId
+      }
+
+      if(loggedInUser.role !== UserRoles.ADMIN){
+        filter = {
+          ...filter,
+          createdBy: loggedInUser._id,
+        }
+      }
+
+      const brand = await brandService.getSingleRowByFilter(filter);
+
+      if(!brand){
+        throw {
+          code: 404,
+          message: "Brand not found",
+          status: "BRAND_NOT_FOUND_ERR",
+        }
+      }
+
+      const del = await brandService.deleteSingleRowByFilter(filter);
+
+      res.json({
+        data: del,
+        message: "Brand Deleted Successfully",
+        status: "SUCCESS",
+      })
     } catch (exception) {
       next(exception);
     }

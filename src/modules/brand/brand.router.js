@@ -13,7 +13,7 @@ brandRouter.post("/", checkLogin(['seller']), uploader().single("logo"), bodyVal
 
 brandRouter.get("/:brandId", checkLogin(), brandCtrl.getDetail);
 brandRouter.put("/:brandId", checkLogin(["seller"]), uploader().single("logo"), brandCtrl.update);
-brandRouter.delete("/:brandId", brandCtrl.delete);
+brandRouter.delete("/:brandId", checkLogin(["seller"]), brandCtrl.delete);
 
 
 module.exports = brandRouter;
