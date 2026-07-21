@@ -26,6 +26,23 @@ class BrandService {
     }
   }
 
+  async transformToBrandUpdate(req, brand) {
+    try {
+      const data = req.body;
+
+      if(req.file) {
+        data.logo = await cloudinaryService.singleFileUpload(req.file.path, '/brand');
+      } else {
+        data.logo = brand.logo
+      }
+
+      data.updatedBy = req.loggedInUser._id;
+      return data;
+    } catch (exception) {
+      throw exception
+    }
+  }
+
   async storeBrand(data) {
     try {
       const brand = new BrandModel(data);
@@ -51,6 +68,27 @@ class BrandService {
 
       const total = await BrandModel.countDocuments(filter);
       return {data, pagination: {page, limit: limit, total: total}}
+    } catch (exception) {
+      throw exception;
+    }
+  }
+
+  async getSingleRowByFilter(filter) {
+    try {
+      const data = await BrandModel.findOne(filter)
+      .populate("createdBy", ["_id", "name", "email", "role", "image", "status"])
+      .populate("updatedBy", ["_id", "name", "email", "role", "image", "status"])
+
+      return data;
+    } catch (exception) {
+      throw exception;
+    }
+  }
+
+  async updateSingleRowByFilter(filter, data) {
+    try {
+      const updateResponse = await BrandModel.findOneAndUpdate(filter, {$set: data}, {new: true})
+      return updateResponse;
     } catch (exception) {
       throw exception;
     }

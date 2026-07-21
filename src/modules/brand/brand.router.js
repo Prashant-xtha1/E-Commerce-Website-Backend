@@ -11,8 +11,8 @@ brandRouter.get("/", checkLogin(), brandCtrl.listAll);
 
 brandRouter.post("/", checkLogin(['seller']), uploader().single("logo"), bodyValidator(BrandDTO), brandCtrl.create);
 
-brandRouter.get("/:brandId", brandCtrl.getDetail);
-brandRouter.put("/:brandId", brandCtrl.update);
+brandRouter.get("/:brandId", checkLogin(), brandCtrl.getDetail);
+brandRouter.put("/:brandId", checkLogin(["seller"]), uploader().single("logo"), brandCtrl.update);
 brandRouter.delete("/:brandId", brandCtrl.delete);
 
 
