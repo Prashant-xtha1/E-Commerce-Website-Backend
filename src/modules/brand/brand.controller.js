@@ -78,7 +78,19 @@ class BrandController {
 
   async getDetailBySlug(req, res, next) {
     try {
-      
+      const brandDetail = await brandService.getSingleRowByFilter({
+        slug: req.params.slug
+      })
+
+      res.json({
+        data: {
+          brand: brandDetail,
+          products: []
+        },
+        message: "Brand Detail",
+        status: "OK",
+        meta: {}
+      })
     } catch (exception) {
       next(exception);
     }
