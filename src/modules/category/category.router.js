@@ -10,10 +10,10 @@ const categoryRouter = require("express").Router()
 categoryRouter.get("/:slug/detail", categoryCtrl.getDetailBySlug);
 categoryRouter.get("/", checkLogin(), categoryCtrl.listAll);
 
-categoryRouter.post("/", checkLogin([UserRoles.SELLER]), uploader().single("logo"), bodyValidator(CategoryDTO), categoryCtrl.create);
+categoryRouter.post("/", checkLogin([UserRoles.SELLER]), uploader().single("image"), bodyValidator(CategoryDTO), categoryCtrl.create);
 
 categoryRouter.get("/:categoryId", checkLogin(), categoryCtrl.getDetail);
-categoryRouter.put("/:categoryId", checkLogin([UserRoles.SELLER]), uploader().single("logo"), categoryCtrl.update);
+categoryRouter.put("/:categoryId", checkLogin([UserRoles.SELLER]), uploader().single("image"), categoryCtrl.update);
 categoryRouter.delete("/:categoryId", checkLogin([UserRoles.SELLER]), categoryCtrl.delete);
 
 
