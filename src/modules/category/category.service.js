@@ -70,11 +70,14 @@ class CategoryService {
       const data = await CategoryModel.find(filter)
       .populate("createdBy", ["_id", "name", "email", "role", "image", "status"])
       .populate("updatedBy", ["_id", "name", "email", "role", "image", "status"])
+      .populate("parentId", ["_id", "name", "slug", "status", "image", "brandId"])
+      .populate("brandId", ["_id", "name", "slug", "status", "logo"])
       .sort({"createdAt": "desc"})
       .skip(skip)
       .limit(limit)
 
       const total = await CategoryModel.countDocuments(filter);
+
       return {data, pagination: {page, limit: limit, total: total}}
     } catch (exception) {
       throw exception;
@@ -86,7 +89,9 @@ class CategoryService {
       const data = await CategoryModel.findOne(filter)
       .populate("createdBy", ["_id", "name", "email", "role", "image", "status"])
       .populate("updatedBy", ["_id", "name", "email", "role", "image", "status"])
-
+      .populate("parentId", ["_id", "name", "slug", "status", "image", "brandId"])
+      .populate("brandId", ["_id", "name", "slug", "status", "logo"])
+      
       return data;
     } catch (exception) {
       throw exception;
