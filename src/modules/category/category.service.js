@@ -15,7 +15,15 @@ class CategoryService {
       })
 
       if(req.file) {
-        data.logo = await cloudinaryService.singleFileUpload(req.file.path, '/category');
+        data.image = await cloudinaryService.singleFileUpload(req.file.path, '/category');
+      }
+
+      if(!data.parentId || data.parentId === "null"){
+        parentId = null;
+      }
+
+      if(!data.brandId || data.brandId === "null"){
+        brandId = null;
       }
 
       data.createdBy = req.loggedInUser._id;
