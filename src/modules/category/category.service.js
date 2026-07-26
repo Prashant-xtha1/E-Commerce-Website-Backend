@@ -19,11 +19,11 @@ class CategoryService {
       }
 
       if(!data.parentId || data.parentId === "null"){
-        parentId = null;
+        data.parentId = null;
       }
 
       if(!data.brandId || data.brandId === "null"){
-        brandId = null;
+        data.brandId = null;
       }
 
       data.createdBy = req.loggedInUser._id;
@@ -39,9 +39,17 @@ class CategoryService {
       const data = req.body;
 
       if(req.file) {
-        data.logo = await cloudinaryService.singleFileUpload(req.file.path, '/category');
+        data.image = await cloudinaryService.singleFileUpload(req.file.path, '/category');
       } else {
-        data.logo = category.logo
+        data.image = category.image
+      }
+
+      if(!data.parentId || data.parentId === "null"){
+        data.parentId = null;
+      }
+
+      if(!data.brandId || data.brandId === "null"){
+        data.brandId = null;
       }
 
       data.updatedBy = req.loggedInUser._id;
