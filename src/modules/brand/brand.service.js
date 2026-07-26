@@ -67,7 +67,7 @@ class BrandService {
       .limit(limit)
 
       const total = await BrandModel.countDocuments(filter);
-      return {data, pagination: {page, limit: limit, total: total}}
+      return {data, pagination: {page: page, limit: limit, total: total}}
     } catch (exception) {
       throw exception;
     }

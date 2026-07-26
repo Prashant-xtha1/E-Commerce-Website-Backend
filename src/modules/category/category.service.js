@@ -86,7 +86,7 @@ class CategoryService {
 
       const total = await CategoryModel.countDocuments(filter);
 
-      return {data, pagination: {page, limit: limit, total: total}}
+      return {data, pagination: {page: page, limit: limit, total: total}}
     } catch (exception) {
       throw exception;
     }
