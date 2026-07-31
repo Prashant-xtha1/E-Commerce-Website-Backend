@@ -1,3 +1,13 @@
+const { UserRoles } = require("../../config/constants");
+const checkLogin = require("../../middlewares/auth.middleware");
+const uploader = require("../../middlewares/uploader.middleware");
+const bodyValidator = require("../../middlewares/validation.middleware");
+const productCtrl = require("./product.controller");
+const { ProductDTO } = require("./product.validator");
+
 const productRouter = require("express").Router();
+
+productRouter.post("/", checkLogin([UserRoles.SELLER]), uploader().array("images"), bodyValidator(ProductDTO), productCtrl.createProduct);
+
 
 module.exports = productRouter;
