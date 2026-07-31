@@ -63,6 +63,14 @@ class ProductService {
     }
   }
 
+  async getAllRowsByFilter(){
+    try {
+      const data = await ProductModel.find()
+      return data;
+    } catch (exception) {
+      throw exception;
+    }
+  }
 }
 
 const productService = new ProductService();
