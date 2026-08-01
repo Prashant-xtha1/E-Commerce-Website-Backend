@@ -65,6 +65,36 @@ class ProductController {
       next(exception);
     }
   }
+
+  async getProductDetailById (req, res, next) {
+    try {
+      const filter = {
+        _id: req.params.id
+      }
+
+      if(req.loggedInUser.role !== UserRoles.ADMIN){
+        filter.createdBy = req.loggedInUser._id;
+      }
+
+      const product = await productService.getSingleRowByFilter(filter);
+
+      if(!product) {
+        throw {
+          code: 404,
+          message: "Product not found",
+          status: "PRODUCT_NOT_FOUND_ERR",
+        }
+      }
+
+      res.json({
+        data: product,
+        message: "Product fetched by id successfully",
+        status: "SUCCESS",
+      })
+    } catch (exception) {
+      next (exception);
+    }
+  }
 }
 
 const productCtrl = new ProductController();
