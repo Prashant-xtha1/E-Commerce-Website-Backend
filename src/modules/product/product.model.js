@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { Status } = require("../../config/constants");
 
 const ProductSchema = new mongoose.Schema({
   name: {
@@ -27,6 +28,11 @@ const ProductSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  images: [{
+    publicId: String,
+    url: String,
+    optimizedUrl: String,
+  }],
   category: [{
     type: mongoose.Types.ObjectId,
     ref: "Category",
@@ -48,6 +54,11 @@ const ProductSchema = new mongoose.Schema({
     default: 0,
   },
   sku: String,
+  status: {
+    type: String,
+    enum: Object.values(Status),
+    default: Status.INACTIVE
+  },
   attributes: [{
     key: String,
     value: [String],
@@ -60,12 +71,12 @@ const ProductSchema = new mongoose.Schema({
   createdBy: {
     type: mongoose.Types.ObjectId,
     ref: "User",
-    required: true,
+    default: null,
   },
   updatedBy: {
     type: mongoose.Types.ObjectId,
     ref: "User",
-    required: true,
+    default: null,
   },
 }, {
   timestamps: true,
