@@ -63,10 +63,29 @@ class ProductService {
     }
   }
 
-  async getAllRowsByFilter(){
+  async getAllRowsByFilter(filter, config){
     try {
-      const data = await ProductModel.find()
-      return data;
+      const skip = (config.page - 1) * config.limit;
+      const data = await ProductModel.find(filter)
+      .populate("category", ["_id", "name", "slug", "status", "image", "brandId"])
+      .populate("brand", ["_id", "name", "slug", "status", "logo"])
+      .populate("seller", ["_id", "name", "email", "role", "image", "status"])
+      .populate("createdBy", ["_id", "name", "email", "role", "image", "status"])
+      .populate("updatedBy", ["_id", "name", "email", "role", "image", "status"])
+      .sort({"createdAt": "desc"})
+      .skip(skip)
+      .limit(config.limit)
+
+      const total = await ProductModel.countDocuments(filter);
+
+      return {
+        data,
+        pagination: {
+          page: config.page,
+          limit: config.limit,
+          total: total
+        }
+      }
     } catch (exception) {
       throw exception;
     }
