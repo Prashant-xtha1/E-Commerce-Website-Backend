@@ -90,6 +90,21 @@ class ProductService {
       throw exception;
     }
   }
+
+  async getSingleRowByFilter(filter) {
+    try {
+      const data = await ProductModel.findOne(filter)
+      .populate("category", ["_id", "name", "slug", "status", "image", "brandId"])
+      .populate("brand", ["_id", "name", "slug", "status", "logo"])
+      .populate("seller", ["_id", "name", "email", "role", "image", "status"])
+      .populate("createdBy", ["_id", "name", "email", "role", "image", "status"])
+      .populate("updatedBy", ["_id", "name", "email", "role", "image", "status"])
+      
+      return data;
+    } catch (exception) {
+      throw exception;
+    }
+  }
 }
 
 const productService = new ProductService();
