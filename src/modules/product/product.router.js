@@ -12,4 +12,6 @@ productRouter.post("/", checkLogin([UserRoles.SELLER]), uploader().array("images
 productRouter.get("/", checkLogin([UserRoles.SELLER]), productCtrl.getAllProducts);
 productRouter.get("/:id", checkLogin([UserRoles.SELLER]), productCtrl.getProductDetailById);
 
+productRouter.put("/:id", checkLogin([UserRoles.SELLER]), uploader().array("images"), bodyValidator(ProductDTO), productCtrl.updateProduct);
+
 module.exports = productRouter;
