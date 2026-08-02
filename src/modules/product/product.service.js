@@ -54,10 +54,63 @@ class ProductService {
     }
   }
 
+    async transformToProductUpdate(req, product) {
+    try {
+      const data = req.body;
+
+      data.price = data.price * 100;
+      data.afterDiscount = data.price - (data.price * data.discount) / 100;
+
+      if(!data.category || data.category === "null") {
+        data.category = null;
+      }
+
+      if(!data.brand || data.brand === "null") {
+        data.brand = null;
+      }
+
+      if(!data.seller || data.seller === "null") {
+        data.seller = req.loggedInUser._id;
+      }
+
+      data.updatedBy = req.loggedInUser._id;
+      data.images = product.images;
+
+      // Storing Images
+      if(req.files) {
+        let images = [];
+        req.files.map((image) => {
+          images.push(cloudinaryService.singleFileUpload(image.path, "/products"));
+        })
+        const result = await Promise.allSettled(images);
+        data.images = [];
+        result.forEach((res) => {
+          if(res.status === "fulfilled") {
+            data.images.unshift(res.value);
+          }
+        })
+      }
+
+      return data;
+
+    } catch (exception) {
+      throw exception;
+    }
+  }
+
   async storeProduct(data) {
     try {
       const product = new ProductModel(data);
       return await product.save();
+    } catch (exception) {
+      throw exception;
+    }
+  }
+
+  async updateProductByFilter (filter, data) {
+    try {
+      const updateResponse = await ProductModel.findOneAndUpdate(filter, {$set: data}, {new: true});
+      return updateResponse;
     } catch (exception) {
       throw exception;
     }
