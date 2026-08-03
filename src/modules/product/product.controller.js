@@ -142,7 +142,7 @@ class ProductController {
       if(req.loggedInUser.role !== UserRoles.SELLER) {
         filter = {
           ...filter,
-          createdBy = req.loggedInUser._id
+          createdBy: req.loggedInUser._id
         }
       }
 
@@ -163,7 +163,7 @@ class ProductController {
         message: "Product deleted successfully",
         status: "SUCCESS",
       })
-      
+
     } catch (exception) {
       next(exception);
     }
