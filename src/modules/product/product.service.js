@@ -158,6 +158,15 @@ class ProductService {
       throw exception;
     }
   }
+  
+  async deleteSingleRowByFilter(filter) {
+    try {
+      const del = await ProductModel.findOneAndDelete(filter); 
+      return del;
+    } catch (exception) {
+      throw exception;
+    }
+  }
 }
 
 const productService = new ProductService();

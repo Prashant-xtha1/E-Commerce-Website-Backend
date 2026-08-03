@@ -132,6 +132,42 @@ class ProductController {
       next(exception);
     }
   }
+
+  async deleteProduct (req, res, next) {
+    try {
+      let filter = {
+        _id: req.params.id,
+      }
+
+      if(req.loggedInUser.role !== UserRoles.SELLER) {
+        filter = {
+          ...filter,
+          createdBy = req.loggedInUser._id
+        }
+      }
+
+      const product = await productService.getSingleRowByFilter(filter);
+
+      if(!product) {
+        throw {
+          code: 404,
+          message: "Product not found",
+          status: "PRODUCT_NOT_FOUND_ERR",
+        }
+      }
+
+      const deleteData = await productService.deleteSingleRowByFilter(filter);
+
+      res.json({
+        data: deleteData,
+        message: "Product deleted successfully",
+        status: "SUCCESS",
+      })
+      
+    } catch (exception) {
+      next(exception);
+    }
+  }
 }
 
 const productCtrl = new ProductController();

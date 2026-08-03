@@ -13,5 +13,6 @@ productRouter.get("/", checkLogin([UserRoles.SELLER]), productCtrl.getAllProduct
 productRouter.get("/:id", checkLogin([UserRoles.SELLER]), productCtrl.getProductDetailById);
 
 productRouter.put("/:id", checkLogin([UserRoles.SELLER]), uploader().array("images"), bodyValidator(ProductDTO), productCtrl.updateProduct);
+productRouter.delete("/:id", checkLogin([UserRoles.SELLER]), productCtrl.deleteProduct);
 
 module.exports = productRouter;
