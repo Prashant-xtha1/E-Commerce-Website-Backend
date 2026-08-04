@@ -207,6 +207,42 @@ class ProductController {
       next(exception);
     }
   }
+
+  async getPublicProducts(req, res, next) {
+    try {
+      let filter = {
+        status: Status.ACTIVE
+      };
+
+      // search
+      if(req.query.search) {
+        filter = {
+          ...filter,
+          $or: [
+            {name: new RegExp(req.query.search, "i")},
+            {description: new RegExp(req.query.search, "i")}
+          ]
+        }
+      }
+
+      // pagination
+      const page = +req.query.page || 1;
+      const limit = +req.query.limit || 20;
+
+      const {data, pagination} = await productService.getAllRowsByFilter(filter, {page: page, limit: limit});
+
+      res.json({
+        data: data,
+        message: "Product fetched successfully",
+        status: "SUCCESS",
+        meta: {
+          pagination
+        }
+      })
+    } catch (exception) {
+      next(exception);
+    }
+  }
   
 }
 
