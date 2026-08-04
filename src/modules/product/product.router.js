@@ -7,6 +7,8 @@ const { ProductDTO } = require("./product.validator");
 
 const productRouter = require("express").Router();
 
+productRouter.get("/get-all", productCtrl.getPublicProducts);
+
 productRouter.get("/:slug/detail", productCtrl.getProductDetailBySlug);
 productRouter.post("/", checkLogin([UserRoles.SELLER]), uploader().array("images"), bodyValidator(ProductDTO), productCtrl.createProduct);
 
