@@ -1,4 +1,4 @@
-const { UserRoles } = require("../../config/constants");
+const { UserRoles, Status } = require("../../config/constants");
 const productService = require("./product.service");
 
 class ProductController {
@@ -168,6 +168,46 @@ class ProductController {
       next(exception);
     }
   }
+
+  async getProductDetailBySlug (req, res, next) {
+    try {
+      let filter = {
+        slug: req.params.slug,
+      }
+
+      const product = await productService.getSingleRowByFilter(filter);
+
+      if(!product) {
+        throw {
+          code: 404,
+          message: "Product not found",
+          status: "PRODUCT_NOT_FOUND_ERR",
+        }
+      }
+
+      // Finding related products
+      const {data} = await productService.getAllRowsByFilter({
+        category: {$in: product.category.map((row) => row._id)},
+        status: Status.ACTIVE,
+      }, {
+        page: 1,
+        limit: 8,
+      })
+
+      res.json({
+        data: {
+          product,
+          related: data,
+        },
+        message: "Product fetched successfully",
+        status: "SUCCESS",
+      })
+
+    } catch (exception) {
+      next(exception);
+    }
+  }
+  
 }
 
 const productCtrl = new ProductController();
