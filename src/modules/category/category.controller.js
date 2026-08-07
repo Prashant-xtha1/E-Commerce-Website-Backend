@@ -1,4 +1,5 @@
-const { UserRoles } = require("../../config/constants");
+const { UserRoles, Status } = require("../../config/constants");
+const productService = require("../product/product.service");
 const categoryService = require("./category.service");
 
 class CategoryController {
@@ -82,14 +83,34 @@ class CategoryController {
         slug: req.params.slug
       })
 
+      if(!categoryDetail) {
+        throw {
+          code: 404,
+          message: "Category not found",
+          status: "CATEGORY_NOT_FOUND_ERR",
+        }
+      }
+
+      // Listing all the products related with this category
+      const page = +req.query.page || 1;
+      const limit = +req.query.limit || 20;
+    
+      const {data, pagination} = await productService.getAllRowsByFilter({
+        category: {$in: [categoryDetail._id]},
+        status: Status.ACTIVE
+      }, {
+        page,
+        limit
+      })
+
       res.json({
         data: {
           category: categoryDetail,
-          products: []
+          products: data
         },
         message: "Category Detail",
         status: "OK",
-        meta: {}
+        meta: pagination,
       })
     } catch (exception) {
       next(exception);

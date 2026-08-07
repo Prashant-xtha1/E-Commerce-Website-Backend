@@ -1,4 +1,5 @@
-const { UserRoles } = require("../../config/constants");
+const { UserRoles, Status } = require("../../config/constants");
+const productService = require("../product/product.service");
 const brandService = require("./brand.service");
 
 class BrandController {
@@ -82,14 +83,31 @@ class BrandController {
         slug: req.params.slug
       })
 
+      if(!brandDetail) {
+        throw {
+          code: 404,
+          message: "Brand not found",
+          status: "BRAND_NOT_FOUND_ERR",
+        }
+      }
+
+      // pagination
+      const page = +req.query.page || 1;
+      const limit = +req.query.limit || 20;
+
+      const {data, pagination} = await productService.getAllRowsByFilter({
+        brand: brandDetail._id,
+        status: Status.ACTIVE,
+      }, {page, limit})
+
       res.json({
         data: {
           brand: brandDetail,
-          products: []
+          products: data
         },
         message: "Brand Detail",
         status: "OK",
-        meta: {}
+        meta: pagination
       })
     } catch (exception) {
       next(exception);
