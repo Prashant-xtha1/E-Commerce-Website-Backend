@@ -43,6 +43,7 @@ const OrderSchema = new mongoose.Schema(
     }],
     subTotal: {
       type: Number,
+      min: 0,
       required: true,
     },
     serviceCharge: {
@@ -63,6 +64,7 @@ const OrderSchema = new mongoose.Schema(
     },
     total: {
       type: Number,
+      min: 0,
       required: true,
     },
     transaction: [{
