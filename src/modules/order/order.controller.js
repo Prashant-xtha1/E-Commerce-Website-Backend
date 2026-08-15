@@ -24,8 +24,10 @@ class OrderController {
         status: "cart",
         buyer: loggedInUser._id
       })
-      
-      let orderCostCalculation = {
+
+      let orderDetail = null;
+
+       let orderCostCalculation = {
         subTotal: 0,
         serviceCharge: 0,
         discount: 0,
@@ -33,19 +35,69 @@ class OrderController {
         total: 0,
       };
 
-      let orderDetail = null;
       let msg = "";
       let transaction = null;
       let order = null;
 
-      // if cart exists in db then update cart 
       if(cart) {
+        // if cart exists -> update cart
         orderDetail = cart.detail;
-      } else {
-        // create cart if not exists in db
-        orderDetail = [orderService.createOrderDetail(productInfo, quantity)];
+
+        let index = null;
+        orderDetail.map((orderDet, ind) => {
+          if(orderDet.product._id.equals(product)){
+            index = ind;
+          }
+        })
+
+        if(index === null) {
+          orderDetail.push(orderService.createOrderDetail(productInfo, quantity));
+        } else {
+          orderDetail[index].quantity = +orderDetail[index].quantity + +quantity;
+          orderDetail[index].price = productInfo.afterDiscount;
+          orderDetail[index].subTotal = productInfo.price * orderDetail[index].quantity
+        }
+
         orderCostCalculation = orderService.createOrderCostCalculation(orderDetail);
-        
+
+        const updateData = {
+          detail: orderDetail,
+          ...orderCostCalculation,
+          updatedBy: loggedInUser._id,
+        }
+
+        msg = "Cart Updated Successfully"; 
+        order = await orderService.updateSingleRowByFilter({_id: cart._id}, updateData);
+       
+      } else {
+        // if cart doesnot exists -> create cart
+
+        // orderDetail = [
+        //   {
+        //     product: productInfo._id,
+        //     price: productInfo.afterDiscount,
+        //     name: productInfo.name,
+        //     seller: productInfo.seller._id,
+        //     quantity: +quantity,
+        //     subTotal: +quantity * productInfo.afterDiscount,
+        //   }
+        // ];
+
+        orderDetail = [orderService.createOrderDetail(productInfo, quantity)]
+
+        // Cost Calculation
+
+        // orderCostCalculation.subTotal = +quantity * productInfo.afterDiscount;
+        // orderCostCalculation.serviceCharge = orderCostCalculation.subTotal * 0.10;
+        // orderCostCalculation.discount = 0;
+        // const netSubTotal = (orderCostCalculation.subTotal + orderCostCalculation.serviceCharge - orderCostCalculation.discount);
+        // orderCostCalculation.tax = netSubTotal * 0.13;
+        // orderCostCalculation.total = netSubTotal + orderCostCalculation.tax;
+
+        orderCostCalculation = orderService.createOrderCostCalculation(orderDetail);
+        msg = "Cart Created Successfully";
+
+        // Creating Order Information
         let orderInfo = {
           orderId: generateRandomString(15),
           buyer: loggedInUser._id,
@@ -59,13 +111,11 @@ class OrderController {
         order = await orderService.createOrder(orderInfo);
       }
       
-
-
-
       res.json({
-        data: orderInfo,
-        msg: "Success"
-      })
+        data: order,
+        msg: msg,
+        status: "SUCCESS"
+      });
 
     } catch (exception) {
       next(exception);
