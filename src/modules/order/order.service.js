@@ -5,7 +5,7 @@ class OrderService {
     try {
       const order = await OrderModel.findOne(filter)
       .populate("buyer", "_id name email role image status")
-      .populate("detail.product", "_id name slug price image status discount afterDiscount")
+      .populate("detail.product", "_id name slug price images status discount afterDiscount")
       return order;
     } catch (exception) {
       throw exception;
@@ -36,11 +36,35 @@ class OrderService {
       orderCostCalculation.subTotal += item.subTotal;
     })
     
-    orderCostCalculation.serviceCharge = orderCostCalculation * 0.10;
+    orderCostCalculation.serviceCharge = orderCostCalculation.subTotal * 0.10;
     orderCostCalculation.discount = 0;
     const netSubTotal = (orderCostCalculation.subTotal + orderCostCalculation.serviceCharge - orderCostCalculation.discount);
     orderCostCalculation.tax = netSubTotal * 0.13;
     orderCostCalculation.total = netSubTotal + orderCostCalculation.tax
+
+    return orderCostCalculation;
+  }
+
+  async createOrder(data) {
+    try {
+      const order = new OrderModel(data);
+      return await order.save();
+    } catch (exception) {
+      throw exception;
+    }
+  }
+
+  async updateSingleRowByFilter(filter, data) {
+    try {
+      const order = await OrderModel.findOneAndUpdate(
+        filter,
+        {$set: data},
+        {new: true},
+      );
+      return order;
+    } catch (exception) {
+      throw exception
+    }
   }
 }
 
