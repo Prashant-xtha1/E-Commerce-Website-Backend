@@ -121,6 +121,33 @@ class OrderController {
       next(exception);
     }
   }
+
+  async getMyCartList (req, res, next) {
+    try {
+      let filter = {
+        status: "cart",
+        buyer: req.loggedInUser
+      }
+
+      const config = {
+        page: +req.query.page || 1,
+        limit: +req.query.limit || 20
+      }
+
+      const {data, pagination} = await orderService.getAllRowsByFilter(filter, config);
+      res.json({
+        data: data,
+        msg: "Your Cart List",
+        status: "SUCCESS",
+        meta: {
+          pagination
+        }
+      })
+
+    } catch (exception) {
+      next(exception);
+    }
+  }
 }
 
 const orderCtrl = new OrderController();
