@@ -12,6 +12,33 @@ class OrderService {
     }
   } 
 
+  async getAllRowsByFilter(filter, config) {
+    try {
+      const skip = (config.page - 1) * config.limit;
+      const data = await OrderModel.find(filter)
+      .populate("buyer", "_id name email role image status")
+      .populate("detail.product", "_id name slug price images status discount afterDiscount")
+      .sort({"createdAt": "desc"})
+      .skip(skip)
+      .limit(config.limit)
+
+      const total = await OrderModel.countDocuments(filter)
+
+      return {
+        data,
+        pagination: {
+          page: +config.page,
+          limit: +config.limit,
+          total: total,
+          noOfPages: Math.ceil(total/config.limit)
+        }
+      }
+
+    } catch (exception) {
+      throw exception;
+    }
+  }
+
   createOrderDetail(productInfo, quantity) {
     return {
       product: productInfo._id,
