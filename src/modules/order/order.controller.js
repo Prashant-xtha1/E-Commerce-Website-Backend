@@ -241,6 +241,35 @@ class OrderController {
     }
   }
 
+  async checkoutOrder (req, res, next) {
+    try {
+      const {cartId, discount} = req.body;
+
+      let cart = await orderService.getSingleRowByFilter({
+        _id: cartId, 
+        buyer: req.loggedInUser._id, 
+        status: "cart"
+      })
+
+      if(!cart) {
+        throw {
+          code: 404,
+          message: "Cart doesnot exists anymore",
+          status: "CART_NOT_FOUND_ERR",
+        }
+      }
+
+      cart = await orderService.updateSingleRowByFilter({_id: cartId}, {status: "new"});
+
+      res.json({
+        data: cart,
+        message: "Your order has been placed successfully",
+        status: "SUCCESS",
+      })
+    } catch (exception) {
+      next(exception);
+    }
+  }
 
 }
 
