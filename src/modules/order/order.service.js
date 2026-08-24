@@ -93,6 +93,15 @@ class OrderService {
       throw exception
     }
   }
+
+  async deleteSingleRowByFilter(filter){
+    try {
+      const order = await OrderModel.findOneAndDelete(filter);
+      return order;
+    } catch (exception) {
+      throw exception;
+    }
+  }
 }
 
 
