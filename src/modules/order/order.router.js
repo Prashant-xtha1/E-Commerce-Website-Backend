@@ -11,5 +11,6 @@ orderRouter.get("/cart-list", checkLogin([UserRoles.ADMIN, UserRoles.CUSTOMER]),
 orderRouter.patch("/cart-update/:cartId", checkLogin([UserRoles.ADMIN, UserRoles.CUSTOMER]), bodyValidator(UpdateCartDTO), orderCtrl.updateOrRemoveFromCart);
 
 orderRouter.post("/checkout", checkLogin([UserRoles.ADMIN, UserRoles.CUSTOMER]), bodyValidator(CheckoutDTO), orderCtrl.checkoutOrder);
+orderRouter.get("/order-list", checkLogin([UserRoles.ADMIN, UserRoles.CUSTOMER]), orderCtrl.getMyOrderList);
 
 module.exports = orderRouter;
