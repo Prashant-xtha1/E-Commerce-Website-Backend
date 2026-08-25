@@ -1,3 +1,4 @@
+const { UserRoles } = require("../../config/constants");
 const { generateRandomString } = require("../../utilities/helper");
 const productService = require("../product/product.service");
 const orderService = require("./order.service");
@@ -266,6 +267,53 @@ class OrderController {
         message: "Your order has been placed successfully",
         status: "SUCCESS",
       })
+    } catch (exception) {
+      next(exception);
+    }
+  }
+
+    async getMyOrderList (req, res, next) {
+    try {
+      let filter = {
+        status: {$ne: "cart"}
+      }
+
+      const loggedInUser = req.loggedInUser;
+
+      if(loggedInUser.role === UserRoles.CUSTOMER) {
+        filter = {
+          ...filter,
+          buyer: loggedInUser._id,
+        }
+      } else if(loggedInUser.role === UserRoles.SELLER) {
+        filter = {
+          ...filter,
+          "product.seller": loggedInUser._id
+        }
+      }
+
+      if(req.query.status) {
+        filter = {
+          ...filter,
+          status: req.query.status
+        }
+      }
+
+      const config = {
+        page: +req.query.page || 1,
+        limit: +req.query.limit || 20
+      }
+
+      const {data, pagination} = await orderService.getAllRowsByFilter(filter, config);
+      res.json({
+        data: data,
+        msg: "Your Order List",
+        status: "SUCCESS",
+        meta: {
+          pagination
+        }
+      })
+
     } catch (exception) {
       next(exception);
     }
