@@ -29,9 +29,15 @@ const AppConfig = {
   jwtSecret: process.env.JWT_SECRET,
 }
 
+const KhaltiConfig = {
+  key: process.env.KHALTI_API_KEY,
+  url: process.env.KHALTI_PAYMENT_URL,
+}
+
 module.exports = {
   CloudinaryConfig,
   DbConfig,
   SMTPConfig,
   AppConfig,
+  KhaltiConfig,
 }
