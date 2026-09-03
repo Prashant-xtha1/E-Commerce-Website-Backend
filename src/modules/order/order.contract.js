@@ -15,8 +15,14 @@ const CheckoutDTO = Joi.object({
   discount: Joi.number().min(0).max(95).optional(),
 })
 
+const PaymentInitiateDTO = Joi.object({
+  orderId: Joi.string().required(),
+  method: Joi.string().regex(/^(khalti|cod)$/).default("cod"),
+})
+
 module.exports = {
   AddToCartDTO,
   UpdateCartDTO,
   CheckoutDTO,
+  PaymentInitiateDTO,
 }
