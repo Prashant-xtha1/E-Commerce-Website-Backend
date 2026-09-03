@@ -319,6 +319,44 @@ class OrderController {
     }
   }
 
+  async initiatePaymet (req, res, next) {
+    try {
+      const {orderId, method} = req.body;
+      const loggedInUser = req.loggedInUser;
+
+      let filter = {
+        orderId: orderId,
+        status: "new",
+        transaction: null,
+      }
+
+      if(loggedInUser.role !== UserRoles.ADMIN) {
+        filter = {
+          ...filter,
+          buyer: loggedInUser._id
+        }
+      }
+
+      let orderDetail = await orderService.getSingleRowByFilter(filter);
+
+      if(!orderDetail) {
+        throw {
+          code: 422,
+          message: "Order already paid",
+          status: "ORDER_ALREADY_PAID_ERR",
+        }
+      }
+
+      // khalti send request for payment url
+      let body = {
+        
+      }
+
+    } catch (exception) {
+      next(exception);
+    }
+  }
+
 }
 
 const orderCtrl = new OrderController();
