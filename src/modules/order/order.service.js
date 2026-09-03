@@ -86,7 +86,7 @@ class OrderService {
       const order = await OrderModel.findOneAndUpdate(
         filter,
         {$set: data},
-        {new: true},
+        {returnDocument: "after"},
       );
       return order;
     } catch (exception) {
