@@ -1,4 +1,4 @@
-const { AppConfig } = require("../../config/app.config");
+const { AppConfig, KhaltiConfig } = require("../../config/app.config");
 const { UserRoles } = require("../../config/constants");
 const { generateRandomString } = require("../../utilities/helper");
 const productService = require("../product/product.service");
@@ -352,15 +352,59 @@ class OrderController {
       let body = {
         purchase_order_id: orderDetail.orderId,
         purchase_order_name: "E-Commerce Purchase",
+        amount: orderDetail.total,
         return_url: AppConfig.beUrl + "/e-commerce/order/payment-status",
+        website_url: AppConfig.feUrl,
       }
+
+      let response = await fetch(KhaltiConfig.url + "/epayment/initiate/", {
+        method: "POST",
+        body: JSON.stringify(body),
+        headers: {
+          "Authorization": "Key " + KhaltiConfig.key,
+          "Content-Type": "application/json",
+        }
+      })
+
+      response = await response.json();
+
+      res.json({
+        data: response,
+        message: "Payment Initiated",
+        status: "SUCCESS",
+      })
 
     } catch (exception) {
       next(exception);
     }
   }
 
+  async paymentStatus (req, res) {
+    try {
+      const data = req.query;
+      const orderDetail = await orderService.getSingleRowByFilter({
+        orderId: data.purchase_order_id,
+      });
 
+      if(!orderDetail) {
+        res.redirect(AppConfig.feUrl + "/?error=Order Not Found")
+      } else {
+        await orderService.updateSingleRowByFilter({
+          orderId: orderDetail.orderId
+        }, {
+          transaction: [{
+            transactionCode: data.transaction_id,
+            amount: data.amount,
+            data: JSON.stringify(data),
+          }],
+          status: "processing"
+        })
+        res.redirect(AppConfig.feUrl + "/payment?success=Payment Success")
+      }
+    } catch (exception) {
+      res.redirect(AppConfig.feUrl + "/payment?error=Payment Failed");
+    }
+  }
 
 }
 
