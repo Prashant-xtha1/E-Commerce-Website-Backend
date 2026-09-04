@@ -12,6 +12,6 @@ router.use("/brand", brandRouter);
 router.use("/category", categoryRouter);
 router.use("/product", productRouter);
 router.use("/order", orderRouter);
-router.user("/chat", chatRouter);
+router.use("/chat", chatRouter);
 
 module.exports = router;
