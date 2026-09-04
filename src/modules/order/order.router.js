@@ -16,6 +16,7 @@ orderRouter.post("/checkout", checkLogin([UserRoles.ADMIN, UserRoles.CUSTOMER]),
 orderRouter.get("/order-list", checkLogin([UserRoles.ADMIN, UserRoles.CUSTOMER]), orderCtrl.getMyOrderList);
 
 // Payment route of order
-orderRouter.post("/initiate-payment", checkLogin([UserRoles.ADMIN, UserRoles.CUSTOMER]), bodyValidator(PaymentInitiateDTO), orderCtrl.initiatePaymet);
+orderRouter.post("/initiate-payment", checkLogin([UserRoles.ADMIN, UserRoles.CUSTOMER]), bodyValidator(PaymentInitiateDTO), orderCtrl.initiatePayment);
+orderRouter.get("/payment-status", orderCtrl.paymentStatus);
 
 module.exports = orderRouter;
