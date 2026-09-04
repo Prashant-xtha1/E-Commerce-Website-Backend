@@ -1,3 +1,4 @@
+const { AppConfig } = require("../../config/app.config");
 const { UserRoles } = require("../../config/constants");
 const { generateRandomString } = require("../../utilities/helper");
 const productService = require("../product/product.service");
@@ -319,7 +320,7 @@ class OrderController {
     }
   }
 
-  async initiatePaymet (req, res, next) {
+  async initiatePayment (req, res, next) {
     try {
       const {orderId, method} = req.body;
       const loggedInUser = req.loggedInUser;
@@ -349,13 +350,17 @@ class OrderController {
 
       // khalti send request for payment url
       let body = {
-        
+        purchase_order_id: orderDetail.orderId,
+        purchase_order_name: "E-Commerce Purchase",
+        return_url: AppConfig.beUrl + "/e-commerce/order/payment-status",
       }
 
     } catch (exception) {
       next(exception);
     }
   }
+
+
 
 }
 
