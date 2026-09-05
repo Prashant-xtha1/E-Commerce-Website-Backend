@@ -1,4 +1,5 @@
 const userService = require("../user/user.service");
+const ChatModel = require("./chat.model");
 
 class ChatController {
   async listAllUsers (req, res, next) {
@@ -28,6 +29,25 @@ class ChatController {
           pagination
         }
       })
+
+    } catch (exception) {
+      next(exception);
+    }
+  }
+
+  async sendMessage (req, res, next) {
+    try {
+      const data = req.body;
+      data.sender = req.loggedInUser._id;
+
+      const chat = new ChatModel(data);
+      await chat.save();
+
+      res.json({
+        data: chat,
+        message: "Message sent successfully",
+        status: "SUCCESS",
+      });
 
     } catch (exception) {
       next(exception);
