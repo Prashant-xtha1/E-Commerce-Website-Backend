@@ -7,5 +7,6 @@ const chatRouter = require("express").Router();
 
 chatRouter.get("/list-users", checkLogin(), chatCtrl.listAllUsers);
 chatRouter.post("/send-message", checkLogin(), bodyValidator(SendChatDTO), chatCtrl.sendMessage);
+chatRouter.get("/detail/:userId", checkLogin(), chatCtrl.getChatDetail);
 
 module.exports = chatRouter;
