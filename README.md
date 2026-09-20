@@ -38,13 +38,16 @@
   These packages have different purposes:
 
 `pg`
+
 PostgreSQL driver for Node.js.
 It allows Node to communicate with PostgreSQL
 
 `sequelize`
+
 ORM.
 
 It lets you work with PostgreSQL using JavaScript models instead of writing SQL for every operation.
 
 `pg-hstore`
+
 Used by Sequelize for PostgreSQL-related serialization needs.
