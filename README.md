@@ -51,3 +51,26 @@ It lets you work with PostgreSQL using JavaScript models instead of writing SQL 
 `pg-hstore`
 
 Used by Sequelize for PostgreSQL-related serialization needs.
+
+### Sequelize Command
+
+`Create`
+
+**If the package.json file does not include a devEngines field...**
+- npx sequelize-cli migration:generate --name <migration-skeleton>
+  - in `migration-skeleton` we write our database table name
+
+**Otherwise**
+- pnpm exec sequelize-cli migration:generate --name <migration-skeleton>
+
+`Run`
+
+- npx sequelize-cli db:migrate
+
+`Undo` - To undo the latest migration:
+
+- npx sequelize-cli db:migrate:undo
+
+`Undo All` - To undo all migrations:
+
+- npx sequelize-cli db:migrate:undo:all
