@@ -57,15 +57,15 @@ Used by Sequelize for PostgreSQL-related serialization needs.
 `Create`
 
 **If the package.json file does not include a devEngines field...**
-- npx sequelize-cli migration:generate --name <migration-skeleton>
+- Command `npx sequelize-cli migration:generate --name <migration-skeleton>`
   - in `migration-skeleton` we write our database table name
 
 **Otherwise**
-- pnpm exec sequelize-cli migration:generate --name <migration-skeleton>
+- Command `pnpm exec sequelize-cli migration:generate --name <migration-skeleton>`
 
-`Run`
+`Run Migration`
 
-- npx sequelize-cli db:migrate
+- Command: `npx sequelize-cli db:migrate`
 
 `Undo` - To undo the latest migration:
 
