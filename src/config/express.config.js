@@ -1,9 +1,11 @@
 const express = require("express");
 const router = require("../routes/router");
+const { sqlInit } = require("./sequelize.config");
 const app = express();
 
 // Importing MongoDB 
-require("./mongodb.config")
+require("./mongodb.config");
+sqlInit();
 
 // Setting urlencoded parser
 app.use(
