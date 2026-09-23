@@ -10,6 +10,10 @@ const DbConfig = {
   mongodb: {
     url: process.env.MONGODB_URL,
     dbname: process.env.MONGODB_DBNAME,
+  }, 
+  pg: {
+    url: process.env.PG_URL,
+    dialect: "postgres",
   }
 }
 
