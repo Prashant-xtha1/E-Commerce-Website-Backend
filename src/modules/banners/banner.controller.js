@@ -111,6 +111,35 @@ class BannerController {
       next(exception);
     }
   }
+
+  async deleteBannerById (req, res, next) {
+    try {
+      let filter = {
+        _id: req.params.bannerId
+      }
+
+      const banner = await bannerService.getSingleRowByFilter(filter);
+
+      if(!banner) {
+        throw {
+          code: 404,
+          message: "Banner not found",
+          status: "BANNER_NOT_FOUND_ERR",
+        }
+      }
+
+      const deleteBanner = await bannerService.deleteSingleRowByFilter(filter);
+
+      res.json({
+        data: deleteBanner,
+        message: "Banner deleted successfully",
+        status: "SUCCESS",
+      })
+
+    } catch (exception) {
+      next(exception);
+    }
+  }
 }
 
 const bannerCtrl = new BannerController();

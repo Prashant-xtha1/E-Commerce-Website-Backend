@@ -101,6 +101,18 @@ class BannerService {
       throw exception;
     }
   }
+
+  async deleteSingleRowByFilter (filter) {
+    try {
+      const del = await BannerModel.destroy({
+        where: filter,
+      })
+
+      return del;
+    } catch (exception) {
+      throw exception;
+    }
+  }
 }
 
 const bannerService = new BannerService();
