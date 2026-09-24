@@ -9,4 +9,7 @@ const bannerRouter = require("express").Router();
 
 bannerRouter.post("/", checkLogin([UserRoles.ADMIN]), uploader().single("image"), bodyValidator(BannerDTO), bannerCtrl.createBanner);
 
+bannerRouter.get("/", checkLogin([UserRoles.ADMIN]), bannerCtrl.listBanner);
+bannerRouter.get("/:bannerId", checkLogin([UserRoles.ADMIN]), bannerCtrl.getBannerDetailById);
+
 module.exports = bannerRouter;

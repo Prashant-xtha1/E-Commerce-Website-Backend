@@ -33,6 +33,44 @@ class BannerService {
       throw exception;
     }
   }
+
+  async getAllRowsByFilter(filter, {page, limit}) {
+    try {
+      const skip = (page - 1) * limit;
+      const {rows, count} = await BannerModel.findAndCountAll({
+        where: filter,
+        order: [["createdAt", "desc"]],
+        limit: limit,
+        offset: skip
+      });
+
+      return {
+        data: rows,
+        pagination: {
+          total: +count,
+          page: +page,
+          limit: +limit,
+          totalNoOfPages: Math.ceil(count/limit)
+        }
+      }
+
+    } catch (exception) {
+      throw exception;
+    }
+  }
+
+  async getSingleRowByFilter(filter) {
+    try {
+      const data = await BannerModel.findOne({
+        where: filter,
+      });
+
+      return data;
+
+    } catch (exception) {
+      throw exception
+    }
+  }
 }
 
 const bannerService = new BannerService();
