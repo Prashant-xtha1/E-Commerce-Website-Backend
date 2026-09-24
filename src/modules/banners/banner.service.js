@@ -71,6 +71,36 @@ class BannerService {
       throw exception
     }
   }
+
+  async transformToBannerUpdate (req, banner) {
+    try {
+      const data = req.body;
+      data.updatedBy = JSON.stringify(req.loggedInUser._id);
+
+      if(req.file) {
+        data.image = await cloudinaryService.singleFileUpload(req.file.path, "/banner");
+      } else {
+        data.image = banner.image;
+      }
+
+      return data;
+    } catch (exception) {
+      throw exception;
+    }
+  }
+
+  async updateSingleRowByFilter (filter, data){
+    try {
+      const [affectedCount, affectedRows] = await BannerModel.update(data, {
+        where: filter,
+        returning: true
+      })
+
+      return affectedRows[0];
+    } catch (exception) {
+      throw exception;
+    }
+  }
 }
 
 const bannerService = new BannerService();

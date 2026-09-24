@@ -12,4 +12,6 @@ bannerRouter.post("/", checkLogin([UserRoles.ADMIN]), uploader().single("image")
 bannerRouter.get("/", checkLogin([UserRoles.ADMIN]), bannerCtrl.listBanner);
 bannerRouter.get("/:bannerId", checkLogin([UserRoles.ADMIN]), bannerCtrl.getBannerDetailById);
 
+bannerRouter.put("/:bannerId", checkLogin([UserRoles.ADMIN]), uploader().single("image"), bodyValidator(BannerDTO), bannerCtrl.updateBannerById);
+
 module.exports = bannerRouter;

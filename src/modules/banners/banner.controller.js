@@ -82,6 +82,35 @@ class BannerController {
       next(exception);
     }
   }
+
+  async updateBannerById (req, res, next) {
+    try {
+      let filter = {
+        _id: req.params.bannerId
+      }
+
+      const banner = await bannerService.getSingleRowByFilter(filter);
+
+      if(!banner) {
+        throw {
+          code: 404,
+          message: "Banner not found",
+          status: "BANNER_NOT_FOUND",
+        }
+      }
+
+      let updateData = await bannerService.transformToBannerUpdate(req, banner);
+      updateData = await bannerService.updateSingleRowByFilter(filter, updateData)
+
+      res.json({
+        data: updateData,
+        message: "Banner Updated Successfully",
+        status: "SUCCESS",
+      })
+    } catch (exception) {
+      next(exception);
+    }
+  }
 }
 
 const bannerCtrl = new BannerController();
